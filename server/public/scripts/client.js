@@ -11,6 +11,17 @@ function equals(){
         operator: selectedOperator
     }
     console.log( 'sending:', objectToSend );
+    $.ajax({
+        type: 'POST',
+        url: '/calculate',
+        data: objectToSend
+    }).then( function( response ){
+        console.log( 'back from POST with:', response );
+        /// - update DOM/HISTORY
+    }).catch( function( err ){
+        console.log( err );
+        alert( 'error with calculation. see console for details' );
+    })
 } // end equals
 
 function onReady(){
