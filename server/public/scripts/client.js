@@ -17,12 +17,30 @@ function equals(){
         data: objectToSend
     }).then( function( response ){
         console.log( 'back from POST with:', response );
-        /// - update DOM/HISTORY
+        getAnswer();
     }).catch( function( err ){
         console.log( err );
         alert( 'error with calculation. see console for details' );
     })
 } // end equals
+
+function getAnswer(){
+    console.log( 'in getAnswer' );
+    // make AJAX GET call to /calculate
+    $.ajax({
+        type: 'GET',
+        url: '/calculate'
+    }).then( function( response ){
+        console.log( 'back from GET with:', response );
+        // display answer
+        let el = $( '#answerOut' );
+        el.empty();
+        el.append( response );
+    }).catch( function( err ){
+        console.log( err );
+        alert( 'error getting answer' );
+    })
+} // end getAnswer
 
 function onReady(){
     $( '#equalsButton' ).on( 'click', equals );

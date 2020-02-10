@@ -8,15 +8,19 @@ app.use( bodyParser.urlencoded( { extended: true } ) );
 // globals
 const port = 5000;
 let history = [];
+let answer = 0;
 // spin up server
 app.listen( port, ()=>{
     console.log( 'server is up on:', port );
 }) //end server up
 
 // routes
+app.get( '/calculate', ( req, res )=>{
+    console.log( 'in /calculate GET' );
+    res.send( answer.toString() );
+}) //end calculate GET
 app.post( '/calculate', ( req, res )=>{
     console.log( 'in /calculate POST:', req.body );
-    let answer = 0;
     if( req.body.operator === '-' ){
         answer = Number( req.body.num0 ) - Number( req.body.num1 );
     }
@@ -29,8 +33,5 @@ app.post( '/calculate', ( req, res )=>{
     else {
         answer = Number( req.body.num0 ) + Number( req.body.num1 );
     }
-
-    console.log( answer );
-
     res.sendStatus( 200 );
 }) // end /calculate POST
