@@ -2,19 +2,26 @@ $( document ).ready( onReady );
 
 // globals
 let selectedOperator = '';
+let num0Input = '';
+let num1Input = '';
 
 function clearInputs(){
     console.log( 'in clearInputs' );
-    $( '#num0In').val('');
-    $( '#num1In').val('');
     selectedOperator = '';
+    num0Input = '';
+    num1Input = '';
 } //end clearInputs
+
+function displayEquation(){
+    console.log( 'in displayEquation' );
+    $( '#equationOut' ).text( num0Input + selectedOperator + num1Input );
+} // end displayEquation
 
 function equals(){
     console.log( 'in equals' );
     let objectToSend = {
-        num0: $( '#num0In').val(),
-        num1: $( '#num1In').val(),
+        num0: num0Input,
+        num1: num1Input,
         operator: selectedOperator
     }
     console.log( 'sending:', objectToSend );
@@ -43,6 +50,7 @@ function getAnswer(){
         let el = $( '#answerOut' );
         el.empty();
         el.append( response );
+        $( '#equationOut' ).text( response );
         getHistory();
     }).catch( function( err ){
         console.log( err );
@@ -72,6 +80,7 @@ function getHistory(){
 
 function onReady(){
     $( '#equalsButton' ).on( 'click', equals );
+    $( '.numberButton' ).on( 'click', selectNumber );
     $( '.operatorButton' ).on( 'click', operator );
     $( '#clearButton' ).on( 'click', clearInputs );
     // load history when page loads
@@ -81,4 +90,17 @@ function onReady(){
 function operator(){
     console.log( 'in operator:', $( this ).text() );
     selectedOperator = $( this ).text();
+    displayEquation();
 } // end operator
+
+function selectNumber(){
+    console.log( 'in selectNumber:', $( this ).text() );
+    if( selectedOperator === '' ){
+        // append to num0Input
+        num0Input += $( this ).text();
+    }else{
+        // append to num1Input
+        num1Input += $( this ).text();
+    }
+    displayEquation();
+} // end selectNumber
