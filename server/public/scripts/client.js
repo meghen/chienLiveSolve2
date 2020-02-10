@@ -3,6 +3,13 @@ $( document ).ready( onReady );
 // globals
 let selectedOperator = '';
 
+function clearInputs(){
+    console.log( 'in clearInputs' );
+    $( '#num0In').val('');
+    $( '#num1In').val('');
+    selectedOperator = '';
+} //end clearInputs
+
 function equals(){
     console.log( 'in equals' );
     let objectToSend = {
@@ -36,15 +43,39 @@ function getAnswer(){
         let el = $( '#answerOut' );
         el.empty();
         el.append( response );
+        getHistory();
     }).catch( function( err ){
         console.log( err );
         alert( 'error getting answer' );
     })
 } // end getAnswer
 
+function getHistory(){
+    console.log( 'in getHistory' );
+    $.ajax({
+        type: 'GET',
+        url: '/history'
+    }).then( function( response ){
+        console.log( 'back from GET with:', response );
+        // display history on DOM
+        let el = $( '#historyOut' );
+        el.empty();
+        for( let i=0; i<response.length; i++){
+            el.append( `<li>${ response[i].equation.num0 } ${ response[i].equation.operator }
+                ${ response[i].equation.num1 } = ${ response[i].answer }</li>` );
+        } //end for
+    }).catch( function( err ){
+        console.log( err );
+        alert( 'error getting history' );
+    })
+} // end getHistory
+
 function onReady(){
     $( '#equalsButton' ).on( 'click', equals );
     $( '.operatorButton' ).on( 'click', operator );
+    $( '#clearButton' ).on( 'click', clearInputs );
+    // load history when page loads
+    getHistory();
 } // end onReady
 
 function operator(){

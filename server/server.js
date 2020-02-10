@@ -33,5 +33,15 @@ app.post( '/calculate', ( req, res )=>{
     else {
         answer = Number( req.body.num0 ) + Number( req.body.num1 );
     }
+    let historyObject = {
+        equation: req.body,
+        answer: answer
+    }
+    console.log( 'adding to history:', historyObject );
+    history.push( historyObject );
     res.sendStatus( 200 );
 }) // end /calculate POST
+app.get( '/history', ( req, res )=>{
+    console.log( 'in /history GET' );
+    res.send( history );
+}) //end /history GET
