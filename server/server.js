@@ -45,3 +45,8 @@ app.get( '/history', ( req, res )=>{
     console.log( 'in /history GET' );
     res.send( history );
 }) //end /history GET
+app.delete( '/history', ( req, res )=>{
+    console.log( 'in /history DELETE' );
+    history = [];
+    res.sendStatus( 200 );
+}) // end /history DELETE

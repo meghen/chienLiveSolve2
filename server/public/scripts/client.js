@@ -5,11 +5,27 @@ let selectedOperator = '';
 let num0Input = '';
 let num1Input = '';
 
+function clearHistory(){
+    console.log( 'in clearHistory' );
+    // AJAX delete call to /history
+    $.ajax({
+        type: 'DELETE',
+        url: '/history'
+    }).then( function( response ){
+        console.log( 'back from DELETE with:', response );
+        getHistory();
+    }).catch( function( err ){
+        console.log( err );
+        alert( 'error clearing history' );
+    })
+} // end clearHistory
+
 function clearInputs(){
     console.log( 'in clearInputs' );
     selectedOperator = '';
     num0Input = '';
     num1Input = '';
+    displayEquation();
 } //end clearInputs
 
 function displayEquation(){
@@ -19,23 +35,28 @@ function displayEquation(){
 
 function equals(){
     console.log( 'in equals' );
-    let objectToSend = {
-        num0: num0Input,
-        num1: num1Input,
-        operator: selectedOperator
+    if( selectedOperator === '' || num0Input === '' || num1Input === '' ){
+        alert( 'all inputs needed!' );
     }
-    console.log( 'sending:', objectToSend );
-    $.ajax({
-        type: 'POST',
-        url: '/calculate',
-        data: objectToSend
-    }).then( function( response ){
-        console.log( 'back from POST with:', response );
-        getAnswer();
-    }).catch( function( err ){
-        console.log( err );
-        alert( 'error with calculation. see console for details' );
-    })
+    else{
+        let objectToSend = {
+            num0: num0Input,
+            num1: num1Input,
+            operator: selectedOperator
+        }
+        console.log( 'sending:', objectToSend );
+        $.ajax({
+            type: 'POST',
+            url: '/calculate',
+            data: objectToSend
+        }).then( function( response ){
+            console.log( 'back from POST with:', response );
+            getAnswer();
+        }).catch( function( err ){
+            console.log( err );
+            alert( 'error with calculation. see console for details' );
+        })
+    }
 } // end equals
 
 function getAnswer(){
@@ -47,9 +68,6 @@ function getAnswer(){
     }).then( function( response ){
         console.log( 'back from GET with:', response );
         // display answer
-        let el = $( '#answerOut' );
-        el.empty();
-        el.append( response );
         $( '#equationOut' ).text( response );
         getHistory();
     }).catch( function( err ){
@@ -83,6 +101,7 @@ function onReady(){
     $( '.numberButton' ).on( 'click', selectNumber );
     $( '.operatorButton' ).on( 'click', operator );
     $( '#clearButton' ).on( 'click', clearInputs );
+    $( '#clearHistory' ).on( 'click', clearHistory );
     // load history when page loads
     getHistory();
 } // end onReady
