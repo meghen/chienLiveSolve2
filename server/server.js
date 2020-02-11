@@ -6,7 +6,7 @@ const bodyParser = require( 'body-parser' );
 app.use( express.static( 'server/public' ) );
 app.use( bodyParser.urlencoded( { extended: true } ) );
 // globals
-const port = 5000;
+const port = process.env.port || 5000;// use Heroku port or 5000 (so we can still local host it)
 let history = [];
 let answer = 0;
 // spin up server
